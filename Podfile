@@ -6,5 +6,6 @@ target 'TwitterForMe' do
   use_frameworks!
 
   # Pods for TwitterForMe
-
+  pod 'AFNetworking'
+  pod 'BDBOAuth1Manager'
 end
