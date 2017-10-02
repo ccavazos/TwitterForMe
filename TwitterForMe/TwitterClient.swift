@@ -112,9 +112,21 @@ class TwitterClient: BDBOAuth1SessionManager {
     
     func like(statusId: Int, success: @escaping (Tweet) -> (), failure: @escaping (Error) -> ()) {
         let status: NSDictionary = [
-            "status": statusId
+            "id": statusId
         ]
         post("1.1/favorites/create.json", parameters: status, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            let newTweet = Tweet(dictionary: response as! NSDictionary)
+            success(newTweet)
+        }) { (task: URLSessionDataTask?, error: Error) in
+            failure(error)
+        }
+    }
+    
+    func unlike(statusId: Int, success: @escaping (Tweet) -> (), failure: @escaping (Error) -> ()) {
+        let status: NSDictionary = [
+            "id": statusId
+        ]
+        post("1.1/favorites/destroy.json", parameters: status, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
             let newTweet = Tweet(dictionary: response as! NSDictionary)
             success(newTweet)
         }) { (task: URLSessionDataTask?, error: Error) in

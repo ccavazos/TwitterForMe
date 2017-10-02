@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class DetailViewController: UIViewController {
 
@@ -50,27 +51,32 @@ class DetailViewController: UIViewController {
     }
     
     @IBAction func replyButtonTapped(_ sender: UIButton) {
-        
+        let alertController = UIAlertController(title: "Not implemented :(", message: nil, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+        })
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
     }
 
     @IBAction func retweetButtonTapped(_ sender: UIButton) {
+        MBProgressHUD.showAdded(to: self.view, animated: true)
         if tweet.retweeted == true {
             TwitterClient.sharedInstance?.unretweet(statusId: tweet.id, success: { (tweet: Tweet) in
                 let alertController = UIAlertController(title: "Unretweet success!", message: nil, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
                 })
                 alertController.addAction(okAction)
+                MBProgressHUD.hide(for: self.view, animated: true)
                 self.present(alertController, animated: true, completion: nil)
-                
                 self.tweet.retweeted = false
                 self.tweet.retweetCount = self.tweet.retweetCount - 1
                 self.loadTweet()
-                
             }, failure: { (error: Error) in
                 let alertController = UIAlertController(title: "Error", message: "There was an error attempting to perform the action. Try again later", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
                 })
                 alertController.addAction(okAction)
+                MBProgressHUD.hide(for: self.view, animated: true)
                 self.present(alertController, animated: true, completion: nil)
             })
         } else {
@@ -79,6 +85,7 @@ class DetailViewController: UIViewController {
                 let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
                 })
                 alertController.addAction(okAction)
+                MBProgressHUD.hide(for: self.view, animated: true)
                 self.present(alertController, animated: true, completion: nil)
                 
                 self.tweet.retweeted = true
@@ -90,29 +97,57 @@ class DetailViewController: UIViewController {
                 let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
                 })
                 alertController.addAction(okAction)
+                MBProgressHUD.hide(for: self.view, animated: true)
                 self.present(alertController, animated: true, completion: nil)
             })
         }
     }
     
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
-        TwitterClient.sharedInstance?.like(statusId: tweet.id, success: { (tweet: Tweet) in
-            let alertController = UIAlertController(title: "Like success!", message: nil, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        if tweet.favorited == true {
+            TwitterClient.sharedInstance?.unlike(statusId: tweet.id, success: { (tweet: Tweet) in
+                let alertController = UIAlertController(title: "Unlike success!", message: nil, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+                })
+                alertController.addAction(okAction)
+                MBProgressHUD.hide(for: self.view, animated: true)
+                self.present(alertController, animated: true, completion: nil)
+                
+                self.tweet.favorited = false
+                self.tweet.favoritesCount = self.tweet.favoritesCount - 1
+                self.loadTweet()
+                
+            }, failure: { (error: Error) in
+                let alertController = UIAlertController(title: "Error", message: "There was an error attempting to perform the action. Try again later", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+                })
+                alertController.addAction(okAction)
+                MBProgressHUD.hide(for: self.view, animated: true)
+                self.present(alertController, animated: true, completion: nil)
             })
-            alertController.addAction(okAction)
-            self.present(alertController, animated: true, completion: nil)
-            
-            self.tweet = tweet
-            self.loadTweet()
-            
-        }, failure: { (error: Error) in
-            let alertController = UIAlertController(title: "Error", message: "There was an error attempting to perform the action. Try again later", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+        } else {
+            TwitterClient.sharedInstance?.like(statusId: tweet.id, success: { (tweet: Tweet) in
+                let alertController = UIAlertController(title: "Like success!", message: nil, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+                })
+                alertController.addAction(okAction)
+                MBProgressHUD.hide(for: self.view, animated: true)
+                self.present(alertController, animated: true, completion: nil)
+                
+                self.tweet.favorited = true
+                self.tweet.favoritesCount = self.tweet.favoritesCount + 1
+                self.loadTweet()
+                
+            }, failure: { (error: Error) in
+                let alertController = UIAlertController(title: "Error", message: "There was an error attempting to perform the action. Try again later", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+                })
+                alertController.addAction(okAction)
+                MBProgressHUD.hide(for: self.view, animated: true)
+                self.present(alertController, animated: true, completion: nil)
             })
-            alertController.addAction(okAction)
-            self.present(alertController, animated: true, completion: nil)
-        })
+        }
     }
     
     /*
