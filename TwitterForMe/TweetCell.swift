@@ -33,7 +33,7 @@ class TweetCell: UITableViewCell {
             if let time = tweet.timestamp {
                 timestampLabel.text = time.timeAgoSinceNow()
             }
-            print(tweet.text!)
+            // print(tweet.text!)
         }
     }
     

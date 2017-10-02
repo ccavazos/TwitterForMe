@@ -60,6 +60,8 @@ class TwitterClient: BDBOAuth1SessionManager {
     func homeTimeline(success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
         get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
             let dictionaries = response as! [NSDictionary]
+            print("Hello")
+            print(dictionaries)
             let tweets = Tweet.tweetsFromArray(dictionaries: dictionaries)
             success(tweets)
         }, failure: { (task: URLSessionDataTask?, error: Error) in
@@ -76,13 +78,13 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func sendTweet(status: String, success: @escaping () -> (), failure: @escaping (Error) -> ()) {
+    func sendTweet(status: String, success: @escaping (Tweet) -> (), failure: @escaping (Error) -> ()) {
         let status: NSDictionary = [
             "status": status
         ]
         post("1.1/statuses/update.json", parameters: status, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
-            print(response as! NSDictionary)
-            success()
+            let newTweet = Tweet(dictionary: response as! NSDictionary)
+            success(newTweet)
         }) { (task: URLSessionDataTask?, error: Error) in
             failure(error)
         }

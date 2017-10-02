@@ -10,10 +10,31 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
+    @IBOutlet var profileImageView: UIImageView!
+    @IBOutlet var nameLabel: UILabel!
+    @IBOutlet var screenNameLabel: UILabel!
+    @IBOutlet var tweetContentLabel: UILabel!
+    @IBOutlet var timestampLabel: UILabel!
+    @IBOutlet var retweetCountLabel: UILabel!
+    @IBOutlet var favoriteCountLabel: UILabel!
+    
+    var tweet: Tweet!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        if let profileUrl = tweet.user?.profileUrl {
+            profileImageView.setImageWith(profileUrl)
+            profileImageView.layer.cornerRadius = 3
+            profileImageView.clipsToBounds = true
+        }
+        nameLabel.text = tweet.user?.name
+        screenNameLabel.text = "@\(tweet.user?.screenName ?? "error")"
+        tweetContentLabel.text = tweet.text
+        if let time = tweet.timestamp {
+            timestampLabel.text = time.timeAgoSinceNow()
+        }
+        print(tweet.text!)
     }
 
     override func didReceiveMemoryWarning() {
@@ -21,7 +42,18 @@ class DetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func replyButtonTapped(_ sender: UIButton) {
+        
+    }
 
+    @IBAction func retweetButtonTapped(_ sender: UIButton) {
+        
+    }
+    
+    @IBAction func favoriteButtonTapped(_ sender: UIButton) {
+        
+    }
+    
     /*
     // MARK: - Navigation
 

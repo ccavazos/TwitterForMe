@@ -9,7 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ComposeViewControllerDelegate {
 
     @IBOutlet var tableView: UITableView!
     
@@ -85,14 +85,31 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return cell
     }
     
-    /*
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    // MARK: - ComposeViewController Delegate
+    
+    func composeViewController(composeViewController: ComposeViewController, didSendUpdate tweet: Tweet) {
+        tweets.insert(tweet, at: 0)
+        tableView.reloadData()
+    }
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "composeSegue" {
+            let navigationController = segue.destination as! UINavigationController
+            let composeVC = navigationController.topViewController as! ComposeViewController
+            composeVC.delegate = self
+        } else if segue.identifier == "detailSegue" {
+            let tweetCell = sender as! TweetCell
+            let indexPath = tableView.indexPath(for: tweetCell)
+            let detailVC = segue.destination as! DetailViewController
+            detailVC.tweet = tweets[indexPath!.row]
+        }
     }
-    */
 
 }

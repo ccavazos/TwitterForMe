@@ -9,6 +9,10 @@
 import UIKit
 import MBProgressHUD
 
+@objc protocol ComposeViewControllerDelegate {
+    @objc optional func composeViewController(composeViewController: ComposeViewController, didSendUpdate tweet: Tweet)
+}
+
 class ComposeViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet var tweetCountButton: UIBarButtonItem!
@@ -16,6 +20,8 @@ class ComposeViewController: UIViewController, UITextViewDelegate {
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var screennameLabel: UILabel!
     @IBOutlet var tweetTextArea: UITextView!
+    
+    weak var delegate: ComposeViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,14 +59,14 @@ class ComposeViewController: UIViewController, UITextViewDelegate {
             return
         }
         MBProgressHUD.showAdded(to: self.view, animated: true)
-        TwitterClient.sharedInstance?.sendTweet(status: status!, success: {
+        TwitterClient.sharedInstance?.sendTweet(status: status!, success: { (tweet: Tweet) in
+            self.delegate?.composeViewController?(composeViewController: self, didSendUpdate: tweet)
             MBProgressHUD.hide(for: self.view, animated: true)
             self.dismiss(animated: true, completion: nil)
         }, failure: { (error: Error) in
             MBProgressHUD.hide(for: self.view, animated: true)
-            print("Error tweetings: \(error.localizedDescription)")
+            print("Error tweeting: \(error.localizedDescription)")
         })
-        
     }
 
     @IBAction func cancelButtonTapped(_ sender: Any) {
