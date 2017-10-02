@@ -8,4 +8,5 @@ target 'TwitterForMe' do
   # Pods for TwitterForMe
   pod 'AFNetworking'
   pod 'BDBOAuth1Manager'
+  pod 'MBProgressHUD'
 end
