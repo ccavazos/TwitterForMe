@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet var tableView: UITableView!
+    
     var tweets: [Tweet]!
+    let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,14 +24,12 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         self.tableView.estimatedRowHeight = 106
         self.tableView.rowHeight = UITableViewAutomaticDimension
+        
+        refreshControl.attributedTitle = NSAttributedString(string: "Fetching new tweets...")
+        refreshControl.addTarget(self, action: #selector(refreshTimeline), for: UIControlEvents.valueChanged)
+        self.tableView.insertSubview(refreshControl, at: 0)
 
-        // Do any additional setup after loading the view.
-        TwitterClient.sharedInstance?.homeTimeline(success: { (tweets: [Tweet]) in
-            self.tweets = tweets
-            self.tableView.reloadData()
-        }, failure: { (error: Error) in
-            print("Error: \(error.localizedDescription)")
-        })
+        fetchTweets()
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,6 +40,34 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     @IBAction func logoutButtonTapped(_ sender: UIBarButtonItem) {
         TwitterClient.sharedInstance?.logout()
+    }
+    
+    // MARK: - Fetch Tweets
+    
+    func fetchTweets() {
+        
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        
+        TwitterClient.sharedInstance?.homeTimeline(success: { (tweets: [Tweet]) in
+            self.tweets = tweets
+            self.tableView.reloadData()
+            self.finishFetch()
+        }, failure: { (error: Error) in
+            print("Error: \(error.localizedDescription)")
+            // TODO: We should probably display a better error bgere
+            self.finishFetch()
+        })
+    }
+    
+    func finishFetch() {
+        refreshControl.endRefreshing()
+        MBProgressHUD.hide(for: self.view, animated: true)
+    }
+    
+    // MARK: - Pull Down to refresh
+    
+    func refreshTimeline() {
+        fetchTweets()
     }
     
     // MARK: - TableView Delegate/DataSource
