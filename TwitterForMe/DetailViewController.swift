@@ -22,7 +22,10 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        loadTweet()
+    }
+    
+    func loadTweet() {
         if let profileUrl = tweet.user?.profileUrl {
             profileImageView.setImageWith(profileUrl)
             profileImageView.layer.cornerRadius = 3
@@ -51,11 +54,65 @@ class DetailViewController: UIViewController {
     }
 
     @IBAction func retweetButtonTapped(_ sender: UIButton) {
-        
+        if tweet.retweeted == true {
+            TwitterClient.sharedInstance?.unretweet(statusId: tweet.id, success: { (tweet: Tweet) in
+                let alertController = UIAlertController(title: "Unretweet success!", message: nil, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+                })
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+                
+                self.tweet.retweeted = false
+                self.tweet.retweetCount = self.tweet.retweetCount - 1
+                self.loadTweet()
+                
+            }, failure: { (error: Error) in
+                let alertController = UIAlertController(title: "Error", message: "There was an error attempting to perform the action. Try again later", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+                })
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+            })
+        } else {
+            TwitterClient.sharedInstance?.retweet(statusId: tweet.id, success: { (tweet: Tweet) in
+                let alertController = UIAlertController(title: "Retweet success!", message: nil, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+                })
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+                
+                self.tweet.retweeted = true
+                self.tweet.retweetCount = self.tweet.retweetCount + 1
+                self.loadTweet()
+                
+            }, failure: { (error: Error) in
+                let alertController = UIAlertController(title: "Error", message: "There was an error attempting to perform the action. Try again later", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+                })
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+            })
+        }
     }
     
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
-        
+        TwitterClient.sharedInstance?.like(statusId: tweet.id, success: { (tweet: Tweet) in
+            let alertController = UIAlertController(title: "Like success!", message: nil, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+            })
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            
+            self.tweet = tweet
+            self.loadTweet()
+            
+        }, failure: { (error: Error) in
+            let alertController = UIAlertController(title: "Error", message: "There was an error attempting to perform the action. Try again later", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction) in
+            })
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        })
     }
     
     /*
