@@ -22,7 +22,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         deauthorize()
         fetchRequestToken(withPath: "oauth/request_token", method: "GET", callbackURL: URL(string: "twitterForMe://oauth"), scope: nil, success: { (requestToken: BDBOAuth1Credential?) in
             if let token = requestToken?.token {
-                print("We got a token = https://api.twitter.com/oauth/authorize?oauth_token=\(token)")
+                print("We got a token")
                 let url = URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(token)")!
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             } else {
@@ -34,30 +34,24 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func logout() {
+        User.currentUser = nil
+        deauthorize()
+        NotificationCenter.default.post(name: User.userDidLogOutNotification, object: nil)
+    }
+    
     func handleOpenUrl(url: URL) {
         let requestToken = BDBOAuth1Credential(queryString: url.query)
         fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential?) in
-            print("I got the access token")
-            
-            self.loginSuccess?()
-            
-            /*
-            client?.homeTimeline(success: { (tweets: [Tweet]) in
-                for tweet in tweets {
-                    print("\(tweet.text!)")
-                }
+            // Get the current account of the user
+            self.currentAccount(success: { (user: User) in
+                // Persiste the user
+                User.currentUser = user
+                // We are all set
+                self.loginSuccess?()
             }, failure: { (error: Error) in
-                print("Error: \(String(describing: error.localizedDescription))")
+                self.loginFailure?(error)
             })
-            
-            
-            client?.currentAccount(success: { (user: User) in
-                
-            }, failure: { (error: Error) in
-                print("Error: \(String(describing: error.localizedDescription))")
-            })
-            */
-            
         }, failure: { (error: Error?) in
             self.loginFailure?(error!)
         })
