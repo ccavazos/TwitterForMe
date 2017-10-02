@@ -31,9 +31,13 @@ class DetailViewController: UIViewController {
         nameLabel.text = tweet.user?.name
         screenNameLabel.text = "@\(tweet.user?.screenName ?? "error")"
         tweetContentLabel.text = tweet.text
-        if let time = tweet.timestamp {
-            timestampLabel.text = time.timeAgoSinceNow()
-        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .medium
+        timestampLabel.text = dateFormatter.string(from: tweet.timestamp!)
+        retweetCountLabel.text = "\(tweet.retweetCount)"
+        favoriteCountLabel.text = "\(tweet.favoritesCount)"
         print(tweet.text!)
     }
 
