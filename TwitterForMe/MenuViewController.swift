@@ -39,6 +39,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
         
+        tableView.tableFooterView = UIView()
+        
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         homeTimelineViewController = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
         mentionsViewController = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
