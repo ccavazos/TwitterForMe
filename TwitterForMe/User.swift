@@ -10,25 +10,38 @@ import Foundation
 
 class User: NSObject {
     
+    var userId: Int?
     var name: String?
     var screenName: String?
     var profileUrl: URL?
     var tagline: String?
     var verified: Bool?
+    var followersCount: Int?
+    var followingCount: Int?
+    var tweetsCount: Int?
+    var backgroundUrl: URL?
     
     var dictionary: NSDictionary?
     
     init(dictionary: NSDictionary) {
         self.dictionary = dictionary
         
+        userId = dictionary["id"] as? Int
         name = dictionary["name"] as? String
         screenName = dictionary["screen_name"] as? String
+        followersCount = dictionary["followers_count"] as? Int
+        followingCount = dictionary["friends_count"] as? Int
+        tweetsCount = dictionary["statuses_count"] as? Int
         
         tagline = dictionary["description"] as? String
         
         let profileUrlString = dictionary["profile_image_url_https"] as? String
         if let profileUrlString = profileUrlString {
-            profileUrl = URL(string: profileUrlString)
+            profileUrl = URL(string: profileUrlString.replacingOccurrences(of: "_normal.jpg", with: ".jpg"))
+        }
+        let backgroundUrlString = dictionary["profile_banner_url"] as? String
+        if let backgroundUrlString = backgroundUrlString {
+            backgroundUrl = URL(string: backgroundUrlString)
         }
         
         verified = dictionary["verified"] as? Bool

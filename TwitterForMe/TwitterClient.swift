@@ -142,4 +142,34 @@ class TwitterClient: BDBOAuth1SessionManager {
         }
     }
     
+    func userProfile(userId: Int, success: @escaping (User?) -> (), failure: @escaping (Error) -> ()) {
+        let status: NSDictionary = [
+            "user_id": userId
+        ]
+        post("1.1/users/lookup.json", parameters: status, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            let userResults: [NSDictionary] = response as! [NSDictionary]
+            if userResults.count > 0 {
+                let user = User(dictionary: userResults[0])
+                success(user)
+            } else {
+                success(nil)
+            }
+        }) { (task: URLSessionDataTask?, error: Error) in
+            failure(error)
+        }
+    }
+    
+    func userTweets(userId: Int, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        let status: NSDictionary = [
+            "user_id": userId
+        ]
+        get("1.1/statuses/user_timeline.json", parameters: status, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            let dictionaries = response as! [NSDictionary]
+            let tweets = Tweet.tweetsFromArray(dictionaries: dictionaries)
+            success(tweets)
+        }, failure: { (task: URLSessionDataTask?, error: Error) in
+            failure(error)
+        })
+    }
+    
 }
