@@ -1,6 +1,6 @@
 # Project 4 - *TweetForMe*
 
-Time spent: **8** hours spent in total
+Time spent: **14** hours spent in total
 
 ## User Stories
 
@@ -31,12 +31,12 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [ ] :-(
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-  1.
-  2.
+  1. How to call the same view controller (profile) since a segue cannot be created
+  2. Is the delegate pattern from the cell + ImageView Tap Gesture Recognizer the best way to handle the user story required? 
 
 
 ## Video Walkthrough
