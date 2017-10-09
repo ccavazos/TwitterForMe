@@ -834,7 +834,7 @@
         <!--Profile View Controller-->
         <scene sceneID="1Cw-hp-kFL">
             <objects>
-                <viewController id="uzs-fP-5HR" customClass="ProfileViewController" customModule="TwitterForMe" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfileViewController" id="uzs-fP-5HR" customClass="ProfileViewController" customModule="TwitterForMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jxH-mo-18z"/>
                         <viewControllerLayoutGuide type="bottom" id="rt1-Mx-iyy"/>
@@ -1155,7 +1155,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="dkb-vS-Yda"/>
-        <segue reference="wif-X0-95F"/>
-        <segue reference="LbE-ih-rMC"/>
+        <segue reference="n98-vN-ypF"/>
+        <segue reference="Ly1-Hf-nga"/>
     </inferredMetricsTieBreakers>
 </document>

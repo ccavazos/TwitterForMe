@@ -9,7 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ComposeViewControllerDelegate {
+class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ComposeViewControllerDelegate, TweetCellDelegate {
 
     @IBOutlet var tableView: UITableView!
     
@@ -116,6 +116,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell", for: indexPath) as! TweetCell
         cell.tweet = tweets[indexPath.row]
+        cell.delegate = self
         return cell
     }
     
@@ -129,7 +130,20 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         tweets.insert(tweet, at: 0)
         tableView.reloadData()
     }
-
+    
+    // MARK: - TweetCell Delegate
+    
+    func tweetCell(tweetCell: TweetCell, didTapUserProfile tweet: Tweet) {
+        if tweet.user?.userId != self.userId {
+            let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+            profileVC.userId = (tweet.user?.userId)!
+            self.navigationController?.pushViewController(profileVC, animated: true)
+        } else {
+            print("Same user, do nothing")
+            // Same user, do nothing
+        }
+    }
+    
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
