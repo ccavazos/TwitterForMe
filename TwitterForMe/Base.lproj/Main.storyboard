@@ -209,6 +209,7 @@
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="tableView" destination="aJl-UP-Xv1" id="aeI-DC-hj7"/>
+                        <segue destination="uzs-fP-5HR" kind="push" identifier="profileSegue" id="ucb-tr-Mhy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qeK-w0-jCt" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -823,6 +824,7 @@
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="tableView" destination="j1J-pB-zcU" id="glU-o2-Zap"/>
+                        <segue destination="uzs-fP-5HR" kind="push" identifier="profileSegue" id="dkb-vS-Yda"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n1M-1A-H3R" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1075,11 +1077,6 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="lp7-UR-Jgu">
-                        <barButtonItem key="leftBarButtonItem" title="Logout" id="lE2-uA-BhI">
-                            <connections>
-                                <action selector="logoutButtonTapped:" destination="uzs-fP-5HR" id="By7-14-zr4"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="compose" id="swz-LK-ZDy">
                             <connections>
                                 <segue destination="pOR-n4-nTS" kind="modal" identifier="composeSegue" id="n98-vN-ypF"/>
@@ -1157,7 +1154,8 @@
         <image name="Retweet" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="n98-vN-ypF"/>
-        <segue reference="Ly1-Hf-nga"/>
+        <segue reference="dkb-vS-Yda"/>
+        <segue reference="wif-X0-95F"/>
+        <segue reference="LbE-ih-rMC"/>
     </inferredMetricsTieBreakers>
 </document>

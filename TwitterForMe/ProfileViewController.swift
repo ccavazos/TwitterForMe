@@ -46,10 +46,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func logoutButtonTapped(_ sender: UIBarButtonItem) {
-        TwitterClient.sharedInstance?.logout()
-    }
-    
     // MARK: - Fetch User Profile
     
     func fetchUser() {

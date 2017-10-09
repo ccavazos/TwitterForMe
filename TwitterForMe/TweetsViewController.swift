@@ -9,7 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ComposeViewControllerDelegate {
+class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ComposeViewControllerDelegate, TweetCellDelegate {
 
     @IBOutlet var tableView: UITableView!
     
@@ -82,6 +82,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell", for: indexPath) as! TweetCell
         cell.tweet = tweets[indexPath.row]
+        cell.delegate = self
         return cell
     }
     
@@ -94,6 +95,12 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func composeViewController(composeViewController: ComposeViewController, didSendUpdate tweet: Tweet) {
         tweets.insert(tweet, at: 0)
         tableView.reloadData()
+    }
+    
+    // MARK: - TweetCell Delegate
+    
+    func tweetCell(tweetCell: TweetCell, didTapUserProfile tweet: Tweet) {
+        self.performSegue(withIdentifier: "profileSegue", sender: tweetCell)
     }
     
     // MARK: - Navigation
@@ -109,6 +116,11 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let indexPath = tableView.indexPath(for: tweetCell)
             let detailVC = segue.destination as! DetailViewController
             detailVC.tweet = tweets[indexPath!.row]
+        } else if segue.identifier == "profileSegue" {
+            let tweetCell = sender as! TweetCell
+            let indexPath = tableView.indexPath(for: tweetCell)
+            let detailVC = segue.destination as! ProfileViewController
+            detailVC.userId = (tweets[indexPath!.row].user?.userId)!
         }
     }
 

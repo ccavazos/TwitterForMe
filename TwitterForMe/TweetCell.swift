@@ -8,6 +8,11 @@
 
 import UIKit
 
+@objc protocol TweetCellDelegate {
+    @objc optional func tweetCell(tweetCell: TweetCell, didTapUserProfile tweet: Tweet)
+}
+
+
 class TweetCell: UITableViewCell {
 
     @IBOutlet var profileImageView: UIImageView!
@@ -16,6 +21,8 @@ class TweetCell: UITableViewCell {
     @IBOutlet var screenNameLabel: UILabel!
     @IBOutlet var tweetTextLabel: UILabel!
     @IBOutlet var timestampLabel: UILabel!
+    
+    weak var delegate: TweetCellDelegate?
     
     var tweet: Tweet! {
         didSet {
@@ -40,6 +47,15 @@ class TweetCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap(sender:)))
+        tapGestureRecognizer.numberOfTapsRequired = 1
+        profileImageView.isUserInteractionEnabled = true
+        profileImageView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    func didTap(sender: Any) {
+        delegate?.tweetCell?(tweetCell: self, didTapUserProfile: tweet)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

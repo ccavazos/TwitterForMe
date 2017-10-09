@@ -9,7 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-class MentionsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MentionsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TweetCellDelegate {
 
     @IBOutlet var tableView: UITableView!
     
@@ -81,6 +81,7 @@ class MentionsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell", for: indexPath) as! TweetCell
         cell.tweet = tweets[indexPath.row]
+        cell.delegate = self
         return cell
     }
     
@@ -88,6 +89,12 @@ class MentionsViewController: UIViewController, UITableViewDelegate, UITableView
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
 
+    // MARK: - TweetCell Delegate
+    
+    func tweetCell(tweetCell: TweetCell, didTapUserProfile tweet: Tweet) {
+        self.performSegue(withIdentifier: "profileSegue", sender: tweetCell)
+    }
+    
     // MARK: - Navigation
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -97,6 +104,11 @@ class MentionsViewController: UIViewController, UITableViewDelegate, UITableView
             let indexPath = tableView.indexPath(for: tweetCell)
             let detailVC = segue.destination as! DetailViewController
             detailVC.tweet = tweets[indexPath!.row]
+        } else if segue.identifier == "profileSegue" {
+            let tweetCell = sender as! TweetCell
+            let indexPath = tableView.indexPath(for: tweetCell)
+            let detailVC = segue.destination as! ProfileViewController
+            detailVC.userId = (tweets[indexPath!.row].user?.userId)!
         }
     }
 
